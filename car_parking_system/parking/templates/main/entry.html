@@ -1,0 +1,104 @@
+{% extends 'main/base.html' %}
+{% block one %}
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #d6d3c9;
+  display: flex;
+/*  justify-content: center;*/
+  align-items: center;
+  min-height: 100vh;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 500px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: auto;
+}
+
+.responsive-form h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1rem;
+  }
+}
+
+</style>
+ 
+ <div class="form-container">
+    <form action="{% url 'entry_vehicle' %}" method="post" class="responsive-form" enctype="multipart/form-data">
+      <h2>Vehicle Entry Form</h2>
+      <div class="form-group">
+        <label for="vehicle-image">Upload Vehicle Image</label>
+        <input type="file" id="image" name="image" required>
+      </div>
+      <div class="form-group">
+        <label for="gate-number">Gate Number</label>
+        <input type="text" id="gate_no" name="gate_no" placeholder="Enter Gate Number" required>
+      </div>
+      <input type="submit" value="Submit" class="btn">
+    </form>
+  </div>
+
+
+{% endblock one %}
+
+
+
+
+

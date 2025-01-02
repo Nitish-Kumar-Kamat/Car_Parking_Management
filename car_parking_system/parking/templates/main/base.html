@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Parking Management</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <h2>Parking System</h2>
+        </div>
+        <ul class="menu">
+            <li><a href="#" data-page="registrations">Registrations</a></li>
+            <li><a href="#" data-page="parking_manage">Parking Management</a></li>
+            <li><a href="#" data-page="file_settings">Settings</a></li>
+        </ul>
+        <div class="footer">
+            <span>Your Footer</span>
+        </div>
+    </div>
+    
+<div class="content" id="content">
+{% block one %}
+<style>
+    .home-content{
+        text-align: center;
+}
+</style>
+    <div class="home-content">
+        <h1>Welcome to Car Parking Management System</h1>
+        <p>Select a menu item to view content.</p>
+    </div>
+{% endblock one %} 
+</div>
+
+    <button class="toggle-btn" id="toggle-btn">☰</button>
+    <script src="{% static 'js/sidebar.js' %}"></script>
+
+</body>
+</html>
