@@ -16,6 +16,6 @@ urlpatterns = [
     path('file_settings/', views.file_settings, name='file_settings'),
     path('entry/',views.entry, name='entry'),
     path('entry_vehicle/',views.entry_vehicle, name='entry_vehicle'),
-    # path('vehicle_list/',views.vehicle_list, name='vehicle_list'),
+    path('vehicle_list/',views.vehicle_list, name='vehicle_list'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
