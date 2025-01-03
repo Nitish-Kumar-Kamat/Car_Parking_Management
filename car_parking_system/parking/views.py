@@ -85,8 +85,9 @@ def vehicle_exit(request, license_plate):
     return render(request, 'exit_receipt.html', {'receipt': receipt_data})
 
 def parking_manage(request):
+    vehicles = Entry_Vehicle.objects.all()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('main/parking_manage.html')
+        html = render_to_string('main/parking_manage.html',{'vehicles':vehicles})
         return JsonResponse({'html': html})
     return render(request, 'main/parking_manage.html')
 
@@ -125,14 +126,14 @@ def entry_vehicle(request):
               gate_no=gate_no,
               entry_time=now(),  # Automatically set the current time
               )
-            # return redirect('vehicle_list')
-            vehicles = Entry_Vehicle.objects.all()
-            return render(request,'main/parking_manage.html',{'vehicles':vehicles})
+            return redirect('/vehicle_list/')
+            # vehicles = Entry_Vehicle.objects.all()
+            # return render(request,'main/parking_manage.html',{'vehicles':vehicles})
         return render(request,"main/parking_manage.html",{'numnot':plate_number})
 
 
-# def vehicle_list(request):
-#     vehicles = Entry_Vehicle.objects.all()
-#     return render(request,'main/parking_manage.html',{'vehicles':vehicles})
+def vehicle_list(request):
+    vehicles = Entry_Vehicle.objects.all()
+    return render(request,'main/parking_manage.html',{'vehicles':vehicles})
 
 

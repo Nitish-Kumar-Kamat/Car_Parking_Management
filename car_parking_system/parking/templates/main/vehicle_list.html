@@ -1,0 +1,12 @@
+{% extends 'main/parking_manage.html' %}
+{% block tables %}
+
+                    {% for x in vehicles %}
+                    <tr>
+                        <td>{{x.plate_number}}</td>
+                        <td>{{x.gate_no}}</td>
+                        <td>{{x.entry_time}}</td>
+                    </tr>
+                  {% endfor %}
+              
+{% endblock tables %}
