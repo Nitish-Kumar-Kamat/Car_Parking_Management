@@ -88,7 +88,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'car_parking', # Create database with the name of car_parking in MySQL 
         'USER': 'root',  # Replace with your MySQL username
-        'PASSWORD': 'Manish@123',  # Replace with your MySQL password
+        'PASSWORD': 'root',  # Replace with your MySQL password
         'HOST': 'localhost',
         'PORT': '3306',
     }
