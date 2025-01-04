@@ -4,6 +4,7 @@ from django.shortcuts import render,get_object_or_404,redirect
 from .models import Entry_Vehicle
 from django.utils.timezone import now
 from .utils import detect_number_plate,get_ocr_model
+from django.contrib import messages
 
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
@@ -19,6 +20,7 @@ def registrations(request):
         html = render_to_string('main/registrations.html')
         return JsonResponse({'html': html})
     return render(request, 'main/registrations.html')
+
 
 
 # def scan_vehicle(request):
@@ -100,6 +102,22 @@ def file_settings(request):
     return render(request, 'main/file_settings.html')
 
 
+# Predefined slots for each level
+SLOTS = {
+    "Basement": ["Slot1", "Slot2", "Slot3", "Slot4"],
+    "Ground Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
+    "First Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
+    "Second Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
+}
+
+def get_available_slots(request):
+    selected_level = request.GET.get('level')
+    booked_slots = Entry_Vehicle.objects.filter(level=selected_level).values_list('slot', flat=True)
+    available_slots = [slot for slot in SLOTS[selected_level] if slot not in booked_slots]
+    return JsonResponse({'slots': available_slots})
+
+
+
 def entry(request):
     return render(request, 'main/entry.html')
 
@@ -107,6 +125,8 @@ def entry_vehicle(request):
     if request.method == 'POST':
         uploaded_file = request.FILES['image']
         gate_no = request.POST.get('gate_no')
+        level = request.POST.get('level')
+        slot = request.POST['slot']
 
         # Save the uploaded image to the media directory
         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
@@ -124,8 +144,11 @@ def entry_vehicle(request):
             Entry_Vehicle.objects.create(
               plate_number=plate_number,
               gate_no=gate_no,
+              level = level,
+              slot = slot,
               entry_time=now(),  # Automatically set the current time
               )
+            # messages.success(request,"Records successfully Submitted!")
             return redirect('/vehicle_list/')
             # vehicles = Entry_Vehicle.objects.all()
             # return render(request,'main/parking_manage.html',{'vehicles':vehicles})

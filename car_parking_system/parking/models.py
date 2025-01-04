@@ -15,10 +15,9 @@ class Entry_Vehicle(models.Model):
     entry_time = models.DateTimeField(auto_now_add=True)
     level = models.CharField(max_length=20,
         choices=[
-        ('basement','Basement'),
-        ('ground','Ground Floor'),
-        ('first','First Floor'),
-        ('second','Second Floor'),
-        ],
-        default='ground'
-        )
+        ('Basement','Basement'),
+        ('Ground Floor','Ground Floor'),
+        ('First Floor','First Floor'),
+        ('Second Floor','Second Floor'),
+        ])
+    slot = models.CharField(max_length=20,default="Slot1")

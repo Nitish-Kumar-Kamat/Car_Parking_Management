@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% block one %}
+{% load static %}
 
 <style>
 body {
@@ -55,6 +56,23 @@ body {
   box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
 }
 
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
 .btn {
   display: block;
   width: 100%;
@@ -79,23 +97,41 @@ body {
 }
 
 </style>
- 
+
  <div class="form-container">
     <form action="{% url 'entry_vehicle' %}" method="post" class="responsive-form" enctype="multipart/form-data">
       <h2>Vehicle Entry Form</h2>
       <div class="form-group">
-        <label for="vehicle-image">Upload Vehicle Image</label>
+        <label for="vehicle-image">Upload Vehicle Image:</label>
         <input type="file" id="image" name="image" required>
       </div>
       <div class="form-group">
-        <label for="gate-number">Gate Number</label>
+        <label for="gate-number">Gate Number:</label>
         <input type="text" id="gate_no" name="gate_no" placeholder="Enter Gate Number" required>
       </div>
+      <div class="form-group">
+        <label for="level">Select Level:</label>
+        <select name="level" id="level" onchange="fetchSlots()" required>
+          <option value="">Select options</option>
+          <option value="Basement" >Basement</option>
+          <option value="Ground Floor" >Ground Floor</option>
+          <option value="First Floor" >First Floor</option>
+          <option value="Second Floor" >Second Floor</option>
+        </select>
+      </div>
+      
+    <div class="form-group">
+      <label for="slot">Select Slot:</label>
+      <select name="slot" id="slot" required>
+        <option value="">Select a Level First</option>
+      </select>
+    </div>
+
       <input type="submit" value="Submit" class="btn">
     </form>
   </div>
 
-
+ <script src="{% static 'js/slot.js' %}"></script>
 {% endblock one %}
 
 
