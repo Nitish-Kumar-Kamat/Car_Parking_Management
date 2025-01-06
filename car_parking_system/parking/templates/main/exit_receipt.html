@@ -1,0 +1,89 @@
+{% extends 'main/base.html' %}
+{% block one %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0px;
+            padding: 0px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .exit-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+<body>
+    <div class="container">
+        <h1>Vehicle Exit Receipt</h1>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Details</th>
+            </tr>
+            {% for x in exit_record %}
+            <tr>
+                <td><strong>Plate Number</strong></td>
+                <td>{{ x.plate_number }}</td>
+            </tr>
+            <tr>
+                <td><strong>Entry Time</strong></td>
+                <td>{{ x.entry_time }}</td>
+            </tr>
+            <tr>
+                <td><strong>Exit Time</strong></td>
+                <td>{{ x.exit_time }}</td>
+            </tr>
+            <tr>
+                <td><strong>Duration (minutes)</strong></td>
+                <td>{{ x.duration }}</td>
+            </tr>
+            <tr>
+                <td><strong>Charges</strong></td>
+                <td>{{ x.charges }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {{error}}
+    </div>
+    <div class="exit-footer">
+        &copy; 2025 Parking Management System. All Rights Reserved.
+    </div>
+</body>
+
+{% endblock one %}

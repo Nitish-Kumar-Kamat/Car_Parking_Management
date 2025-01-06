@@ -1,4 +1,3 @@
-{% block tables %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -92,7 +91,7 @@
         <a href="#">New</a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'entry' %}">Entry</a></li>
-          <li><a href="#">Exit</a></li>
+          <li><a href="{%url 'exit' %}">Exit</a></li>
         </ul>
       </li>
   </ul>
@@ -138,5 +137,3 @@
   <script src="{% static 'js/p_script.js' %}"></script>
 </body>
 </html>
-
-{% endblock tables %}
