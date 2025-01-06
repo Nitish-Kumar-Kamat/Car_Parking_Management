@@ -1,13 +1,18 @@
 import os
 from django.conf import settings
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Entry_Vehicle
+from .models import Entry_Vehicle, VehicleExit
 from django.utils.timezone import now
 from .utils import detect_number_plate,get_ocr_model
 from django.contrib import messages
 
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
+
+
+
+from datetime import datetime
+
 
 def process_image(request):
     ocr_model = get_ocr_model() 
@@ -148,28 +153,76 @@ def entry_vehicle(request):
               slot = slot,
               entry_time=now(),  # Automatically set the current time
               )
-<<<<<<< HEAD
-
-
-             #return redirect('vehicle_list')
-             #vehicles = Entry_Vehicle.objects.all()
-        #     return render(request,'main/parking_manage.html',{'vehicles':vehicles})
-        # return render(request,"main/parking_manage.html",{'numnot':plate_number})
-    # Fetch all vehicles for display
-    vehicles = Entry_Vehicle.objects.all()
-    return render(request, 'main/base.html', {'vehicles': vehicles})
-    #return render(request, 'main/parking_manage.html', {'vehicles': vehicles, 'message': message})
-=======
-            # messages.success(request,"Records successfully Submitted!")
             return redirect('/vehicle_list/')
             # vehicles = Entry_Vehicle.objects.all()
             # return render(request,'main/parking_manage.html',{'vehicles':vehicles})
         return render(request,"main/parking_manage.html",{'numnot':plate_number})
->>>>>>> d627b70e221aca2d127e9fdb2da5e07df999d1c9
 
 
 def vehicle_list(request):
     vehicles = Entry_Vehicle.objects.all()
     return render(request,'main/parking_manage.html',{'vehicles':vehicles})
 
+def exit_vehicle(request):
+    return render(request,"main/vehicle_exit_form.html")
 
+
+def vehicle_exit_view(request):
+    if request.method == "POST":
+        # Ensure an image file is provided
+        if 'image' not in request.FILES:
+            return render(request, 'exit_error.html', {"error": "No image file provided"})
+
+        uploaded_file = request.FILES['image']
+
+        # Save the uploaded image to the media directory
+        file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+        with open(file_path, 'wb+') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+
+        # Detect vehicle plate number using your custom function
+        try:
+            plate_number = detect_number_plate(file_path)
+        except Exception as e:
+            return render(request, 'exit_error.html', {"error": "Number plate detection failed"})
+
+        # Check if the vehicle exists in Entry_Vehicle
+        try:
+            entry_record = Entry_Vehicle.objects.get(plate_number=plate_number)
+        except Entry_Vehicle.DoesNotExist:
+            return render(request, 'exit_error.html', {"error": "Vehicle not found in entry records"})
+
+        # Calculate duration and charges
+        entry_time = entry_record.entry_time
+        exit_time = now()
+        duration = (exit_time - entry_time).total_seconds() / 60  # Duration in minutes
+        charges = calculate_charges(duration)
+
+        # Save to VehicleExit table
+        exit_record = VehicleExit.objects.create(
+            plate_number=plate_number,
+            entry_time=entry_time,
+            exit_time=exit_time,
+            duration=round(duration),
+            charges=charges
+        )
+
+        entry_record.delete()
+
+        # Pass exit_record as a list to the template
+        return render(request, 'vehicle_exit_success.html', {"exit_record": [exit_record]})
+
+    # If not POST request, return error page
+    return render(request, 'vehicle_exit_success', {"error": "Invalid request"})
+
+# def vehicle_exit_record(request):
+#     vehicles = vehicle_exit_record.objects.all()
+#     return render(request, 'vehicle_exit_success.html', {"exit_record": [exit_record]})
+
+
+
+def calculate_charges(duration):
+    # Example logic: ₹10 for every hour
+    hourly_rate = 60
+    return round((duration / 60) * hourly_rate, 2)

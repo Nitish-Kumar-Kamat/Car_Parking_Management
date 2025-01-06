@@ -18,5 +18,8 @@ urlpatterns = [
     path('entry_vehicle/',views.entry_vehicle, name='entry_vehicle'),
     path('vehicle_list/',views.vehicle_list, name='vehicle_list'),
     path('get_available_slots/', views.get_available_slots, name='get_available_slots'),
+    path('exit_vehicle/',views.exit_vehicle, name='exit_vehicle'),
+    path('vehicle-exit/', views.vehicle_exit_view, name='vehicle_exit'),
+    # path('vehicle_exit_record/',views.vehicle_exit_record,name='vehicle_exit_record'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
