@@ -1,0 +1,123 @@
+{% extends 'main/base.html' %}
+
+{% block one %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .pay-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pay-button button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pay-button button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .success-message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+
+    <div class="container">
+        <h1>Vehicle Exit Receipt</h1>
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td><strong>Plate Number</strong></td>
+                <td>{{ exit_record.plate_number }}</td>
+            </tr>
+            <tr>
+                <td><strong>Entry Time</strong></td>
+                <td>{{ exit_record.entry_time }}</td>
+            </tr>
+            <tr>
+                <td><strong>Exit Time</strong></td>
+                <td>{{ exit_record.exit_time }}</td>
+            </tr>
+            <tr>
+                <td><strong>Duration (minutes)</strong></td>
+                <td>{{ exit_record.duration }}</td>
+            </tr>
+            <tr>
+                <td><strong>Charges (INR)</strong></td>
+                <td>{{ exit_record.charges }}</td>
+            </tr>
+        </table>
+
+        <div class="pay-button">
+            {% if exit_record.payment_status == 'Success' %}
+                <div class="success-message">Payment Successful!</div>
+            {% else %}
+                <button id="pay-now-btn">Pay Now</button>
+            {% endif %}
+        </div>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.getElementById("pay-now-btn").onclick = function () {
+            var options = {
+                "key": "{{ RAZORPAY_KEY_ID }}",
+                "amount": {{ charges_in_paise }},
+                "currency": "INR",
+                "name": "Parking Management System",
+                "description": "Parking Fee Payment",
+                "order_id": "{{ razorpay_order_id }}",
+                "handler": function (response) {
+                    window.location.href = "/payment_success/?payment_id=" + response.razorpay_payment_id +
+                                           "&order_id=" + response.razorpay_order_id +
+                                           "&signature=" + response.razorpay_signature;
+                },
+                "theme": {
+                    "color": "#4CAF50"
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        };
+    </script>
+{% endblock one %}

@@ -5,13 +5,12 @@ from .models import Entry_Vehicle, VehicleExit
 from django.utils.timezone import now
 from .utils import detect_number_plate,get_ocr_model
 from django.contrib import messages
-
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
-
-
-
 from datetime import datetime
+import razorpay
+from django.views.decorators.csrf import csrf_exempt
+import logging
 
 
 def process_image(request):
@@ -26,70 +25,6 @@ def registrations(request):
         return JsonResponse({'html': html})
     return render(request, 'main/registrations.html')
 
-
-
-# def scan_vehicle(request):
-#     if request.method == 'POST':
-#         uploaded_file = request.FILES['image']
-
-#         # Save the uploaded image to the media directory
-#         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-#         with open(file_path, 'wb+') as destination:
-#             for chunk in uploaded_file.chunks():
-#                 destination.write(chunk)
-        
-#         # Use YOLO-based detection to find number plates
-#         number_plate = detect_number_plate(file_path)
-        
-        
-#         if number_plate is None:
-#             number_plate = "Number Plate Not detected!"
-#         else:           # Save entry to database
-#             vehicle = Vehicle.objects.create(
-#               license_plate=number_plate,
-#               entry_time=now(),  # Automatically set the current time
-#               )
-
-#             receipt_data = {
-#             'image_name': uploaded_file.name,
-#             'number_plate': number_plate,
-#             'entry_time': vehicle.entry_time,
-#             # 'image_url': f"{settings.MEDIA_URL}{uploaded_file.name}",
-#             'image_url': f"/media/vehicles/{uploaded_file.name}",
-            
-#             }
-#             return render(request, 'main/receipt.html', {'receipt': receipt_data})
-#         return render(request,"main/receipt.html",{'numnot':number_plate})
-    
-    # return render(request, 'main/registrations.html')
-
-
-
-
-# Vehicle exit view
-def vehicle_exit(request, license_plate):
-    # Find the vehicle by its license plate
-    vehicle = get_object_or_404(Vehicle, license_plate=license_plate, exit_time__isnull=True)
-    
-    # Set exit time and calculate parking fee
-    vehicle.exit_time = now()
-    
-    # Example fee calculation based on hours parked
-    duration = (vehicle.exit_time - vehicle.entry_time).total_seconds() / 3600  # Duration in hours
-    vehicle.parking_fee = round(duration * 10, 2)  # Example fee: $10 per hour
-    
-    # Save the updated vehicle record
-    vehicle.save()
-    
-    # Receipt data to display
-    receipt_data = {
-        'license_plate': vehicle.license_plate,
-        'entry_time': vehicle.entry_time,
-        'exit_time': vehicle.exit_time,
-        'parking_fee': vehicle.parking_fee,
-    }
-    
-    return render(request, 'exit_receipt.html', {'receipt': receipt_data})
 
 def parking_manage(request):
     vehicles=Entry_Vehicle.objects.all
@@ -120,7 +55,6 @@ def get_available_slots(request):
     booked_slots = Entry_Vehicle.objects.filter(level=selected_level).values_list('slot', flat=True)
     available_slots = [slot for slot in SLOTS[selected_level] if slot not in booked_slots]
     return JsonResponse({'slots': available_slots})
-
 
 
 def entry(request):
@@ -163,66 +97,168 @@ def vehicle_list(request):
     vehicles = Entry_Vehicle.objects.all()
     return render(request,'main/parking_manage.html',{'vehicles':vehicles})
 
-def exit_vehicle(request):
-    return render(request,"main/vehicle_exit_form.html")
+def exit(request):
+    return render(request,"main/exit_form.html")
 
+
+def create_razorpay_order(charges_in_paise):
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+    order_data = {
+        'amount': charges_in_paise,  # Amount in paise
+        'currency': 'INR',
+        'payment_capture': '1'  # Automatic payment capture
+    }
+    order = client.order.create(data=order_data)
+    return order['id']
+
+
+# Razorpay client setup
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
+
+# Logging setup
+logger = logging.getLogger(__name__)
 
 def vehicle_exit_view(request):
     if request.method == "POST":
-        # Ensure an image file is provided
         if 'image' not in request.FILES:
-            return render(request, 'exit_error.html', {"error": "No image file provided"})
+            return render(request, 'main/exit_error.html', {"error": "No image file provided"})
 
         uploaded_file = request.FILES['image']
-
-        # Save the uploaded image to the media directory
         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
         with open(file_path, 'wb+') as destination:
             for chunk in uploaded_file.chunks():
                 destination.write(chunk)
 
-        # Detect vehicle plate number using your custom function
         try:
             plate_number = detect_number_plate(file_path)
         except Exception as e:
-            return render(request, 'exit_error.html', {"error": "Number plate detection failed"})
+            return render(request, 'main/exit_error.html', {"error": "Number plate detection failed"})
 
-        # Check if the vehicle exists in Entry_Vehicle
         try:
             entry_record = Entry_Vehicle.objects.get(plate_number=plate_number)
         except Entry_Vehicle.DoesNotExist:
-            return render(request, 'exit_error.html', {"error": "Vehicle not found in entry records"})
+            return render(request, 'main/exit_error.html', {"error": "Vehicle not found in entry records"})
 
-        # Calculate duration and charges
         entry_time = entry_record.entry_time
         exit_time = now()
-        duration = (exit_time - entry_time).total_seconds() / 60  # Duration in minutes
+        duration = (exit_time - entry_time).total_seconds() / 60
         charges = calculate_charges(duration)
 
-        # Save to VehicleExit table
+        # Create VehicleExit record with a temporary razorpay_order_id
         exit_record = VehicleExit.objects.create(
             plate_number=plate_number,
             entry_time=entry_time,
             exit_time=exit_time,
             duration=round(duration),
-            charges=charges
+            charges=charges,
+            razorpay_order_id="temporary_order_id"  # Add temporary razorpay_order_id here for now
         )
 
         entry_record.delete()
 
-        # Pass exit_record as a list to the template
-        return render(request, 'vehicle_exit_success.html', {"exit_record": [exit_record]})
+        # Razorpay order ID creation
+        razorpay_order_id = create_razorpay_order(int(charges * 100))  # Convert to integer
+        print("Razorpay Order ID:", razorpay_order_id)
 
-    # If not POST request, return error page
-    return render(request, 'vehicle_exit_success', {"error": "Invalid request"})
+        # Update the exit_record with the generated razorpay_order_id
+        exit_record.razorpay_order_id = razorpay_order_id
+        exit_record.save()
 
-# def vehicle_exit_record(request):
-#     vehicles = vehicle_exit_record.objects.all()
-#     return render(request, 'vehicle_exit_success.html', {"exit_record": [exit_record]})
+        return render(request, 'main/exit_receipt.html', {
+            "exit_record": exit_record,
+            "RAZORPAY_KEY_ID": settings.RAZORPAY_KEY_ID,
+            "razorpay_order_id": razorpay_order_id,
+            "charges_in_paise": charges * 100
+        })
 
-
+    return render(request, 'main/exit_error.html', {"error": "Invalid request"})
 
 def calculate_charges(duration):
-    # Example logic: ₹10 for every hour
     hourly_rate = 60
     return round((duration / 60) * hourly_rate, 2)
+
+
+@csrf_exempt
+def payment_success_view(request):
+    if request.method == "GET":
+        # Get Razorpay details from the query parameters
+        payment_id = request.GET.get("payment_id")
+        order_id = request.GET.get("order_id")
+        payment_signature = request.GET.get("signature")
+
+        if not payment_id or not order_id or not payment_signature:
+            return render(request, 'main/payment_error.html', {
+                'error': "Missing payment details."
+            })
+
+        # Log the received order_id to compare it with the stored one
+        logger.debug(f"Received order_id from query parameters: {order_id}")
+
+        # Verify the payment signature
+        params_dict = {
+            'razorpay_order_id': order_id,
+            'razorpay_payment_id': payment_id,
+            'razorpay_signature': payment_signature
+        }
+
+        try:
+            # Razorpay's built-in signature verification
+            client.utility.verify_payment_signature(params_dict)
+
+            # Fetch payment details from Razorpay
+            payment = client.payment.fetch(payment_id)
+
+            if payment['status'] == 'captured':
+                # Log the payment status and try to fetch the exit record
+                logger.debug(f"Payment captured for order_id: {order_id}")
+
+                # Check if the VehicleExit record exists
+                try:
+                    # Ensure that the 'razorpay_order_id' is not null
+                    exit_record = VehicleExit.objects.get(razorpay_order_id=order_id)
+
+                    logger.debug(f"Found VehicleExit record: {exit_record}")
+
+                    # Update the exit record with payment details
+                    exit_record.payment_id = payment_id
+                    exit_record.payment_status = 'Success'
+                    exit_record.save()
+
+                    # Render success page
+                    return render(request, 'main/payment_success.html', {
+                        'exit_record': exit_record,
+                        'charges_in_paise': float(exit_record.charges),  # Convert charges to paise
+                        'razorpay_order_id': order_id,
+                    })
+
+                except VehicleExit.DoesNotExist:
+                    # Log missing record details for debugging
+                    logger.error(f"VehicleExit record not found for order_id: {order_id}")
+                    return render(request, 'main/payment_error.html', {
+                        'error': "VehicleExit record not found."
+                    })
+
+            else:
+                # Payment status is not 'captured'
+                logger.error(f"Payment failed for order_id: {order_id}, status: {payment['status']}")
+                return render(request, 'main/payment_error.html', {
+                    'error': f"Payment status is '{payment['status']}'."  # payment['status'] is dynamic
+                })
+
+        except razorpay.errors.SignatureVerificationError:
+            logger.error(f"Signature verification failed for order_id: {order_id}")
+            return render(request, 'main/payment_error.html', {
+                'error': "Payment signature verification failed."
+            })
+
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {str(e)}")
+            return render(request, 'main/payment_error.html', {
+                'error': f"An unexpected error occurred: {str(e)}"
+            })
+
+    return HttpResponse("Invalid request method", status=405)
+
+
+
+ 
