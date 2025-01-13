@@ -9,20 +9,24 @@ from django.contrib import messages
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
 from datetime import datetime
-
+from django.views.decorators.cache import never_cache
+from django.contrib.auth.decorators import login_required
 
 def process_image(request):
     ocr_model = get_ocr_model() 
 
+@never_cache
+@login_required(login_url='/auth/login/')
 def home(request):
     return render(request, 'main/base.html')
+
+
 
 def registrations(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         html = render_to_string('main/registrations.html')
         return JsonResponse({'html': html})
     return render(request, 'main/registrations.html')
-
 
 
 # def scan_vehicle(request):
@@ -72,10 +76,9 @@ def parking_manage(request):
 
 def file_settings(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('main/file_settings.html')
+        html = render_to_string('main/file_settings.html', request=request)
         return JsonResponse({'html': html})
     return render(request, 'main/file_settings.html')
-
 
 # Predefined slots for each level
 SLOTS = {
@@ -111,8 +114,7 @@ def entry_vehicle(request):
         
         # Use YOLO-based detection to find number plates
         plate_number = detect_number_plate(file_path)
-        
-        
+    
         if plate_number is None:
             plate_number = "Number Plate Not detected!"
         else:           # Save entry to database

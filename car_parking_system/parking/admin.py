@@ -3,7 +3,7 @@ from .models import Entry_Vehicle, VehicleExit
 
 @admin.register(Entry_Vehicle)
 class EntryVehicleAdmin(admin.ModelAdmin):
-    list_display = ('plate_number', 'gate_no', 'entry_time', 'exit_time', 'level', 'slot')  # Fields to display in list view
+    list_display = ('plate_number', 'gate_no', 'entry_time', 'level', 'slot')  # Fields to display in list view
     # list_filter = ('level', 'gate_no')  # Filters on the right side
     # search_fields = ('plate_number',)  # Search bar for plate number
     # ordering = ('-entry_time',)  # Default ordering by entry_time descending

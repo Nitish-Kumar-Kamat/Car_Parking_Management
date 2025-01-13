@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head> 
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Parking Management</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body>
+<body class="{% if user.is_authenticated %}authenticated{% endif %}">
+
+    <button class="toggle-btn" id="toggle-btn">☰</button>
     <div class="sidebar" id="sidebar">
         <div class="logo">
-            <h2>Parking System</h2>
+            <ul>
+                <li><a href="/">Parking Systems</a></li>
+            </ul> 
         </div>
         <ul class="menu">
-            <li><a href="#" data-page="registrations">Registrations</a></li>
+            <!-- <li><a href="#" data-page="registrations">Registrations</a></li> -->
             <li><a href="{% url 'entry_vehicle' %}" data-page="parking_manage">Parking Management</a></li>
             <li><a href="#" data-page="file_settings">Settings</a></li>
         </ul>
@@ -21,25 +29,131 @@
             <span>Akili systems</span>
         </div>
     </div>
-    
+     
 <div class="content" id="content">
 {% block one %}
-<style>
+
+<!-- <style>
     .home-content{
         text-align: center;
 }
+</style> -->
+
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background: url('/static/images/c4.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        color: white;
+    }
+
+    .left-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .nav-buttons button {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .primary-btn {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    .secondary-btn {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .right-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .right-buttons ul li {
+        padding: 8px 16px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        list-style: none;
+    }
+
+    .log-out {
+        background-color: #ffc107;
+    }
+    .log-out a{
+        text-decoration: none; 
+    }
+    .log-out:hover{
+        background-color:#dc3545;   
+    }
+
+    .contact-us {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .navbar {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .left-section, .right-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 </style>
-    <div class="home-content">
+
+<nav class="navbar">
+    <div class="left-section">
+       
+    </div>
+    <div class="right-buttons">
+        <ul>
+            <li class="log-out"><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+
+
+
+
+    <!-- <div class="home-content">
         <h1>Welcome to Car Parking Management System</h1>
         <p>Select a menu item to view content.</p>
-    </div>
+    </div> -->
+
 {% endblock one %} 
 </div>
-
-    <button class="toggle-btn" id="toggle-btn">☰</button>
     <script src="{% static 'js/sidebar.js' %}"></script>
 
 </body>
 </html>
-
-

@@ -22,15 +22,27 @@ body {
     transform: translateX(0);
 }
 
-.logo {
+.logo ul li {
     text-align: center;
     padding: 20px 0;
     border-bottom: 1px solid #3e5060;
+    list-style: none;
 }
 
-.logo img {
-    width: 120px;
+.logo ul li a {
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
 }
+/* 
+.logo ul li a:hover {
+    background-color: #1b2734;
+    border-left: 4px solid #00bcd4;
+    padding-left: 16px;
+    margin: 30px;
+} */
+
 
 .menu {
     list-style-type: none;

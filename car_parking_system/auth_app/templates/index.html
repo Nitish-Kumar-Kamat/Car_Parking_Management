@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-buttons button {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .primary-btn {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .secondary-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .right-buttons button {
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sign-in {
+            background-color: #ffc107;
+        }
+
+        .contact-us {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .left-section, .right-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="left-section">
+            <div class="logo">Akili System</div>
+           <!--  <div class="nav-buttons">
+                <button class="primary-btn">Button 1</button>
+                <button class="secondary-btn">Button 2</button>
+            </div> -->
+        </div>
+        <div class="right-buttons">
+            <button class="sign-in"><a href="{% url 'login' %}">Sign In</a></button>
+            <button class="contact-us"><a href="#">Contact Us</a></button>
+        </div>
+    </nav>
+  {% block one %}
+
+{% endblock one %}
+</body>
+</html>
+

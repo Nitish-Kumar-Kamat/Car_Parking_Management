@@ -91,7 +91,7 @@
         <a href="#">New</a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'entry' %}">Entry</a></li>
-          <li><a href="{%url 'exit' %}">Exit</a></li>
+          <li><a href="{% url 'exit' %}">Exit</a></li>
         </ul>
       </li>
   </ul>
@@ -124,10 +124,10 @@
         </div>
 
         {% if numnot %}
-                  <tr>
-                      <td>{{numnot}}</td>
-                  </tr>
-                    {% endif %}
+            <tr>
+                <td>{{numnot}}</td>
+            </tr>
+        {% endif %}
     </div>
 
 

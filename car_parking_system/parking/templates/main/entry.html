@@ -100,6 +100,7 @@ body {
 
  <div class="form-container">
     <form action="{% url 'entry_vehicle' %}" method="post" class="responsive-form" enctype="multipart/form-data">
+      {% csrf_token %}
       <h2>Vehicle Entry Form</h2>
       <div class="form-group">
         <label for="vehicle-image">Upload Vehicle Image:</label>

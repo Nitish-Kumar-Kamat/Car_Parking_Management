@@ -1,11 +1,19 @@
+ // Sidebar Toggle Button Functionality
+ document.getElementById('toggle-btn').addEventListener('click', function () {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('minimized');
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     const menuLinks = document.querySelectorAll('.menu a');
     const content = document.getElementById('content');
-
+   
     function loadContent(page) {
         fetch(`/${page}/`, {
+            method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest', // Indicate it's an AJAX request
+                
             },
         })
             .then((response) => {
@@ -31,4 +39,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
