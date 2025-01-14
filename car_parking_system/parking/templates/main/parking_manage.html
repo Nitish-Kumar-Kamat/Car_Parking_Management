@@ -5,135 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Parking Management</title>
   {% load static %}
-  <link rel="stylesheet" href="{% static 'css/p_manage.css' %}">
-
-<!-- table creation -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .container {
-            width: 100%;
-            margin: 10px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        td img {
-            width: 100px;
-            height: auto;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            th, td {
-                font-size: 14px;
-                padding: 8px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            th, td {
-                font-size: 12px;
-                padding: 6px;
-            }
-        }
-        .new-records{
-            text-align: left;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-    <nav class="navbar">
-    <ul class="nav-links">
-      <li class="dropdown">
-        <a href="#">New</a>
-        <ul class="dropdown-menu">
-          <li><a href="{% url 'entry' %}">Entry</a></li>
-          <li><a href="{% url 'exit' %}">Exit</a></li>
-        </ul>
-      </li>
-  </ul>
-</nav>
-    </ul>
-        <!-- <h2>Vehicle Entry Records</h2> -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>    
-                        <th>Vehicle Number</th>
-                        <th>Gate Number</th>
-                        <th>Entry Time</th>
-                        <th>Level</th>
-                        <th>Slot</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for x in vehicles %}
-                    <tr>
-                        <td>{{x.plate_number}}</td>
-                        <td>{{x.gate_no}}</td>
-                        <td>{{x.entry_time}}</td>
-                        <td>{{x.level}}</td>
-                        <td>{{x.slot}}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-            </table>
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+  <div class="navbar" id="navbar">
+    <a href="#">In/Out</a>
+    
+    <div class="dropdown">
+        <button class="dropbtn">Configurations 
+            &#9662;
+        </button>
+        <div class="dropdown-content">
+            <a href="#">Projects</a>
+            <a href="#">Tower</a>
+            <a href="#">Floor</a>
+            <a href="#">Parking Number</a>
         </div>
-
-        {% if numnot %}
-            <tr>
-                <td>{{numnot}}</td>
-            </tr>
-        {% endif %}
     </div>
+    <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>
+</div>
 
-
-<!-- end table creation -->
-
-
-  <script src="{% static 'js/p_script.js' %}"></script>
+<script>
+    function toggleMenu() {
+        var navbar = document.getElementById("navbar");
+        navbar.classList.toggle("responsive");
+    }
+</script>
 </body>
 </html>

@@ -1,7 +1,9 @@
- // Sidebar Toggle Button Functionality
- document.getElementById('toggle-btn').addEventListener('click', function () {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('minimized');
+const toggleBtn = document.getElementById('toggle-btn');
+const sidebar = document.getElementById('sidebar');
+
+toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('active');
+    toggleBtn.classList.toggle('active');
 });
 
 document.addEventListener('DOMContentLoaded', function () {

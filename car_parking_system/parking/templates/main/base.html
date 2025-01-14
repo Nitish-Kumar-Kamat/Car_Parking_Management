@@ -11,18 +11,18 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body class="{% if user.is_authenticated %}authenticated{% endif %}">
+<body>
 
     <button class="toggle-btn" id="toggle-btn">☰</button>
     <div class="sidebar" id="sidebar">
         <div class="logo">
             <ul>
                 <li><a href="/">Parking Systems</a></li>
-            </ul> 
+            </ul>
         </div>
         <ul class="menu">
             <!-- <li><a href="#" data-page="registrations">Registrations</a></li> -->
-            <li><a href="{% url 'entry_vehicle' %}" data-page="parking_manage">Parking Management</a></li>
+            <li><a href="{% url 'entry_vehicle' %}" data-page="parking_manage">Parkings</a></li>
             <li><a href="#" data-page="file_settings">Settings</a></li>
         </ul>
         <div class="footer">
@@ -50,7 +50,7 @@
 
     body {
         font-family: Arial, sans-serif;
-        background: url('/static/images/c4.jpg') no-repeat center center fixed;
+        background: url('/static/images/login.jpeg') no-repeat center center fixed;
         background-size: cover;
     }
 

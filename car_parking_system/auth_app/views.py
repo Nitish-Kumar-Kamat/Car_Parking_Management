@@ -27,7 +27,7 @@ def log_in(request):
 			user=authenticate(username=a,password=b)
 			if user is not None:
 				login(request,user)
-				messages.success(request,"Login Successful")
+				# messages.success(request,"Login Successful")
 				# fm=LoginForm()
 				# return render(request,"login.html",{'fm':fm})
 				return redirect('/')

@@ -10,6 +10,8 @@ body {
 }
 
 .sidebar {
+    top: 0;
+    left: 0;
     width: 250px;
     background-color: #2d3e50;
     color: white;
@@ -35,13 +37,6 @@ body {
     text-decoration: none;
     font-size: 20px;
 }
-/* 
-.logo ul li a:hover {
-    background-color: #1b2734;
-    border-left: 4px solid #00bcd4;
-    padding-left: 16px;
-    margin: 30px;
-} */
 
 
 .menu {
@@ -57,7 +52,7 @@ body {
     text-decoration: none;
     color: white;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 10px;
     display: block;
     transition: background 0.3s;
 }
@@ -78,7 +73,7 @@ body {
 
 .content {
     margin-left: 250px;
-    padding: 20px;
+    padding: 5px; 
     width: calc(100% - 250px);
     transition: margin-left 0.3s ease-in-out;
 }
