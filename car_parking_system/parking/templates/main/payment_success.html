@@ -2,48 +2,145 @@
 
 {% block one %}
 <div style="display: flex; justify-content: center; align-items: center; min-height: 80vh; background-color: #f4f4f9;">
-    <div style="text-align: center; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); width: 80%; max-width: 600px;">
+    <style>
+        .payment-container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .payment-heading {
+            color: #28a745;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .payment-text {
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        .payment-table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .payment-table th {
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+        }
+
+        .payment-table th:first-child {
+            border-radius: 5px 0 0 5px;
+        }
+
+        .payment-table th:last-child {
+            border-radius: 0 5px 5px 0;
+        }
+
+        .payment-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .payment-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .payment-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-home {
+            background-color: #28a745;
+        }
+
+        .btn-home:hover {
+            background-color: #218838;
+        }
+
+        .btn-print {
+            background-color: #007bff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-print:hover {
+            background-color: #0056b3;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .payment-container, .payment-container * {
+                visibility: visible;
+            }
+
+            .payment-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+    
+    <div class="payment-container">
         <!-- Heading -->
-        <h1 style="color: #28a745; font-size: 2.5rem; margin-bottom: 10px;">🎉 Payment Successful!</h1>
-        <p style="color: #555; font-size: 1.2rem;">Your payment was successful. Thank you for using our service!</p>
+        <h1 class="payment-heading">🎉 Payment Successful!</h1>
+        <p class="payment-text">Your payment was successful. Thank you for using our service!</p>
 
         <!-- Table -->
-        <table style="margin: 20px auto; border-collapse: collapse; width: 100%; text-align: left; font-size: 1rem;">
+        <table class="payment-table">
             <thead>
-                <tr style="background-color: #28a745; color: white;">
-                    <th style="padding: 12px; border-radius: 5px 0 0 5px;">Field</th>
-                    <th style="padding: 12px; border-radius: 0 5px 5px 0;">Details</th>
+                <tr>
+                    <th>Field</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
-                <tr style="background-color: #f9f9f9;">
-                    <td style="padding: 10px; border: 1px solid #ddd;">Payment ID</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">{{ exit_record.payment_id }}</td>
+                <tr>
+                    <td>Payment ID</td>
+                    <td>{{ exit_record.payment_id }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 10px; border: 1px solid #ddd;">Order ID</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">{{ razorpay_order_id }}</td>
-                </tr>
-                <tr style="background-color: #f9f9f9;">
-                    <td style="padding: 10px; border: 1px solid #ddd;">Status</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">Success</td>
+                    <td>Order ID</td>
+                    <td>{{ razorpay_order_id }}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 10px; border: 1px solid #ddd;">Amount (INR)</td>
-                    <td style="padding: 10px; border: 1px solid #ddd;">{{ charges_in_paise }}</td>
+                    <td>Status</td>
+                    <td>Success</td>
+                </tr>
+                <tr>
+                    <td>Amount (INR)</td>
+                    <td>{{ charges_in_paise }}</td>
                 </tr>
             </tbody>
         </table>
 
         <!-- Back to Home Button -->
-        <a href="/" style="display: inline-block; margin-top: 20px; padding: 12px 25px; background-color: #28a745; color: white; text-decoration: none; font-size: 1rem; border-radius: 5px; font-weight: bold; transition: background-color 0.3s;">
-            Back to Home
-        </a>
+        <a href="/" class="payment-btn btn-home">Back to Home</a>
 
         <!-- Print Button -->
-        <button onclick="window.print();" style="display: inline-block; margin-top: 20px; padding: 12px 25px; background-color: #007bff; color: white; border: none; font-size: 1rem; border-radius: 5px; font-weight: bold; cursor: pointer; transition: background-color 0.3s;">
-            Print This Page
-        </button>
+        <button onclick="window.print();" class="payment-btn btn-print">Print</button>
     </div>
 </div>
 {% endblock one %}

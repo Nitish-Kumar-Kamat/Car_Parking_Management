@@ -12,7 +12,6 @@ import razorpay
 from django.views.decorators.csrf import csrf_exempt
 import logging
 
-
 def process_image(request):
     ocr_model = get_ocr_model() 
 

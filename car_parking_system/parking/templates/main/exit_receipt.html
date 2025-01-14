@@ -28,19 +28,20 @@
             background-color: #4CAF50;
             color: white;
         }
-        .pay-button {
+        .button-container {
             margin-top: 20px;
             text-align: center;
         }
-        .pay-button button {
+        .button-container button {
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
         }
-        .pay-button button:hover {
+        .button-container button:hover {
             background-color: #45a049;
         }
         .error-message {
@@ -55,7 +56,7 @@
         }
     </style>
 
-    <div class="container">
+    <div class="container" id="receipt">
         <h1>Vehicle Exit Receipt</h1>
         <table>
             <tr>
@@ -84,12 +85,13 @@
             </tr>
         </table>
 
-        <div class="pay-button">
+        <div class="button-container">
             {% if exit_record.payment_status == 'Success' %}
                 <div class="success-message">Payment Successful!</div>
             {% else %}
                 <button id="pay-now-btn">Pay Now</button>
             {% endif %}
+            <button id="print-receipt-btn">Print Receipt</button>
         </div>
 
         {% if error %}
@@ -99,6 +101,7 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        // Razorpay Payment
         document.getElementById("pay-now-btn").onclick = function () {
             var options = {
                 "key": "{{ RAZORPAY_KEY_ID }}",
@@ -118,6 +121,11 @@
             };
             var rzp = new Razorpay(options);
             rzp.open();
+        };
+
+        // Print Receipt
+        document.getElementById("print-receipt-btn").onclick = function () {
+            window.print();
         };
     </script>
 {% endblock one %}
