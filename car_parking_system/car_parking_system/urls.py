@@ -20,5 +20,6 @@ urlpatterns = [
     path('get_available_slots/', views.get_available_slots, name='get_available_slots'),
     path('exit/',views.exit, name='exit'),
     path('vehicle_exit/', views.vehicle_exit_view, name='vehicle_exit'),
+    path('payment_success/', views.payment_success_view, name='payment_success'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

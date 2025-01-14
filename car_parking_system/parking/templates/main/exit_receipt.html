@@ -1,33 +1,26 @@
 {% extends 'main/base.html' %}
+
 {% block one %}
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0px;
-            padding: 0px;
             background-color: #f9f9f9;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
         .container {
-            width: 600px;
+            max-width: 600px;
             margin: 20px auto;
             background: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
         th, td {
-            padding: 12px 15px;
+            padding: 10px;
             text-align: left;
             border: 1px solid #ddd;
         }
@@ -35,55 +28,104 @@
             background-color: #4CAF50;
             color: white;
         }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .exit-footer {
-            text-align: center;
+        .button-container {
             margin-top: 20px;
-            font-size: 14px;
-            color: #777;
+            text-align: center;
+        }
+        .button-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button-container button:hover {
+            background-color: #45a049;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .success-message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
         }
     </style>
-<body>
-    <div class="container">
+
+    <div class="container" id="receipt">
         <h1>Vehicle Exit Receipt</h1>
         <table>
             <tr>
                 <th>Field</th>
                 <th>Details</th>
             </tr>
-            {% for x in exit_record %}
             <tr>
                 <td><strong>Plate Number</strong></td>
-                <td>{{ x.plate_number }}</td>
+                <td>{{ exit_record.plate_number }}</td>
             </tr>
             <tr>
                 <td><strong>Entry Time</strong></td>
-                <td>{{ x.entry_time }}</td>
+                <td>{{ exit_record.entry_time }}</td>
             </tr>
             <tr>
                 <td><strong>Exit Time</strong></td>
-                <td>{{ x.exit_time }}</td>
+                <td>{{ exit_record.exit_time }}</td>
             </tr>
             <tr>
                 <td><strong>Duration (minutes)</strong></td>
-                <td>{{ x.duration }}</td>
+                <td>{{ exit_record.duration }}</td>
             </tr>
             <tr>
-                <td><strong>Charges</strong></td>
-                <td>{{ x.charges }}</td>
+                <td><strong>Charges (INR)</strong></td>
+                <td>{{ exit_record.charges }}</td>
             </tr>
-            {% endfor %}
         </table>
-        {{error}}
-    </div>
-    <div class="exit-footer">
-        &copy; 2025 Parking Management System. All Rights Reserved.
-    </div>
-</body>
 
+        <div class="button-container">
+            {% if exit_record.payment_status == 'Success' %}
+                <div class="success-message">Payment Successful!</div>
+            {% else %}
+                <button id="pay-now-btn">Pay Now</button>
+            {% endif %}
+            <button id="print-receipt-btn">Print Receipt</button>
+        </div>
+
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        // Razorpay Payment
+        document.getElementById("pay-now-btn").onclick = function () {
+            var options = {
+                "key": "{{ RAZORPAY_KEY_ID }}",
+                "amount": {{ charges_in_paise }},
+                "currency": "INR",
+                "name": "Parking Management System",
+                "description": "Parking Fee Payment",
+                "order_id": "{{ razorpay_order_id }}",
+                "handler": function (response) {
+                    window.location.href = "/payment_success/?payment_id=" + response.razorpay_payment_id +
+                                           "&order_id=" + response.razorpay_order_id +
+                                           "&signature=" + response.razorpay_signature;
+                },
+                "theme": {
+                    "color": "#4CAF50"
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        };
+
+        // Print Receipt
+        document.getElementById("print-receipt-btn").onclick = function () {
+            window.print();
+        };
+    </script>
 {% endblock one %}

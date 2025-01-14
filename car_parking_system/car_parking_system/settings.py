@@ -102,6 +102,8 @@ DATABASES = {
 
 
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -149,3 +151,6 @@ import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/vehicles/')  # Save files in 'media/vehicles folder'
 MEDIA_URL = '/media/vehicles/'
 
+# Razorpay Configuration
+RAZORPAY_SECRET_KEY = 'Owc4Of8QYdoisZX2aAcN2mle'
+RAZORPAY_KEY_ID = 'rzp_test_60XFEuzlpndVIB'

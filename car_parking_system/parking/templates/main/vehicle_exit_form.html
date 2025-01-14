@@ -1,0 +1,73 @@
+{% extends 'main/base.html' %}
+{% block one %}
+{% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            display: flex;
+            /*justify-content: center;*/
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin:auto;
+        }
+        .form-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-container input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .form-container button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .form-container button:hover {
+            background: #45a049;
+        }
+    </style>
+
+
+    <div class="form-container">
+        <h1>Vehicle Exit</h1>
+        <form method="POST" action="{% url 'vehicle_exit' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="image">Upload Vehicle Image:</label>
+            <input type="file" name="image" id="image" required />
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+
+{% endblock one %}
