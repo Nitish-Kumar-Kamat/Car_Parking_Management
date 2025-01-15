@@ -24,54 +24,9 @@ def home(request):
     return render(request, 'main/base.html')
 
 
-
-def registrations(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('main/registrations.html')
-        return JsonResponse({'html': html})
-    return render(request, 'main/registrations.html')
-
-
-# def scan_vehicle(request):
-#     if request.method == 'POST':
-#         uploaded_file = request.FILES['image']
-
-#         # Save the uploaded image to the media directory
-#         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-#         with open(file_path, 'wb+') as destination:
-#             for chunk in uploaded_file.chunks():
-#                 destination.write(chunk)
-        
-#         # Use YOLO-based detection to find number plates
-#         number_plate = detect_number_plate(file_path)
-        
-        
-#         if number_plate is None:
-#             number_plate = "Number Plate Not detected!"
-#         else:           # Save entry to database
-#             vehicle = Vehicle.objects.create(
-#               license_plate=number_plate,
-#               entry_time=now(),  # Automatically set the current time
-#               )
-
-#             receipt_data = {
-#             'image_name': uploaded_file.name,
-#             'number_plate': number_plate,
-#             'entry_time': vehicle.entry_time,
-#             # 'image_url': f"{settings.MEDIA_URL}{uploaded_file.name}",
-#             'image_url': f"/media/vehicles/{uploaded_file.name}",
-            
-#             }
-#             return render(request, 'main/receipt.html', {'receipt': receipt_data})
-#         return render(request,"main/receipt.html",{'numnot':number_plate})
-    
-    # return render(request, 'main/registrations.html')
-
-
 def parking_manage(request):
-    vehicles=Entry_Vehicle.objects.all
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('main/parking_manage.html',{'vehicles':vehicles})
+        html = render_to_string('main/parking_manage.html')
         return JsonResponse({'html': html})
     return render(request, 'main/parking_manage.html')
 
@@ -96,7 +51,6 @@ def get_available_slots(request):
     booked_slots = Entry_Vehicle.objects.filter(level=selected_level).values_list('slot', flat=True)
     available_slots = [slot for slot in SLOTS[selected_level] if slot not in booked_slots]
     return JsonResponse({'slots': available_slots})
-
 
 def entry(request):
     return render(request, 'main/entry.html')
@@ -130,12 +84,12 @@ def entry_vehicle(request):
             return redirect('/vehicle_list/')
             # vehicles = Entry_Vehicle.objects.all()
             # return render(request,'main/parking_manage.html',{'vehicles':vehicles})
-        return render(request,"main/parking_manage.html",{'numnot':plate_number})
+        return render(request,"main/in_out.html",{'numnot':plate_number})
 
 
 def vehicle_list(request):
     vehicles = Entry_Vehicle.objects.all()
-    return render(request,'main/parking_manage.html',{'vehicles':vehicles})
+    return render(request,"main/in_out.html",{'vehicles':vehicles})
 
 def exit(request):
     return render(request,"main/exit_form.html")

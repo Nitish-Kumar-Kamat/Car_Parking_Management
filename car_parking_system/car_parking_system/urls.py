@@ -9,9 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/',include('auth_app.urls')),
     path('', views.home, name='home'),
-    # path('scan/', views.scan_vehicle, name='scan_vehicle'),   
     # AJAX endpoints for loading content
-    path('registrations/', views.registrations, name='registrations'),
     path('parking_manage/',views.parking_manage, name='parking_manage'),
     path('file_settings/', views.file_settings, name='file_settings'),
     path('entry/',views.entry, name='entry'),
@@ -21,5 +19,6 @@ urlpatterns = [
     path('exit/',views.exit, name='exit'),
     path('vehicle_exit/', views.vehicle_exit_view, name='vehicle_exit'),
     path('payment_success/', views.payment_success_view, name='payment_success'),
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

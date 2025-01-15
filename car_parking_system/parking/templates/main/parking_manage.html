@@ -7,7 +7,7 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
   <div class="navbar" id="navbar">
-    <a href="#">In/Out</a>
+    <a href="{% url 'vehicle_list' %}">In/Out</a>
     
     <div class="dropdown">
         <button class="dropbtn">Configurations 
@@ -22,6 +22,10 @@
     </div>
     <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>
 </div>
+
+{% block content %}
+
+{% endblock content %}
 
 <script>
     function toggleMenu() {
