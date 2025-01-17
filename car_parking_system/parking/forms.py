@@ -1,6 +1,7 @@
-# # forms.py
+from django import forms
+from .models import Project
 
-# from django import forms
-
-# class VehicleExitForm(forms.Form):
-#     image = forms.ImageField(label="Upload Vehicle Image")  # Image upload field
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['project_name']

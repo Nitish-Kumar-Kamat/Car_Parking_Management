@@ -11,7 +11,7 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body>
+<body class="{% if user.is_authenticated %}authenticated{% endif %}">
 
     <button class="toggle-btn" id="toggle-btn">☰</button>
     <div class="sidebar" id="sidebar">
@@ -21,12 +21,11 @@
             </ul>
         </div>
         <ul class="menu">
-            <!-- <li><a href="#" data-page="registrations">Registrations</a></li> -->
             <li><a href="{% url 'entry_vehicle' %}" data-page="parking_manage">Parkings</a></li>
             <li><a href="#" data-page="file_settings">Settings</a></li>
         </ul>
         <div class="footer">
-            <span>Akili systems</span>
+            <span><a style="color: white; text-decoration: none; "  href="https://akilisystems.in/">Akili systems</a></span>
         </div>
     </div>
      

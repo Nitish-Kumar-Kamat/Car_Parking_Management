@@ -1,19 +1,19 @@
 import os
 from django.conf import settings
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Entry_Vehicle, VehicleExit
+from .models import Entry_Vehicle, VehicleExit,Project
 from django.utils.timezone import now
 from .utils import detect_number_plate,get_ocr_model
 from django.contrib import messages
 from django.http import JsonResponse,HttpResponse
 from django.template.loader import render_to_string
 from datetime import datetime
-
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.decorators import login_required
 import razorpay
 from django.views.decorators.csrf import csrf_exempt
 import logging
+from .forms import ProjectForm
 
 def process_image(request):
     ocr_model = get_ocr_model() 
@@ -23,7 +23,7 @@ def process_image(request):
 def home(request):
     return render(request, 'main/base.html')
 
-
+@login_required(login_url='/auth/login/')
 def parking_manage(request):
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         html = render_to_string('main/parking_manage.html')
@@ -39,18 +39,18 @@ def file_settings(request):
     return render(request, 'main/file_settings.html')
 
 # Predefined slots for each level
-SLOTS = {
-    "Basement": ["Slot1", "Slot2", "Slot3", "Slot4"],
-    "Ground Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
-    "First Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
-    "Second Floor": ["Slot1", "Slot2", "Slot3", "Slot4"],
+PARKS = {
+    "Basement": ["Park1", "Park2", "Park3", "Park4"],
+    "Ground Floor": ["Park1", "Park2", "Park3", "Park4"],
+    "First Floor": ["Park1", "Park2", "Park3", "Park4"],
+    "Second Floor": ["Park1", "Park2", "Park3", "Park4"],
 }
 
-def get_available_slots(request):
+def get_available_parks(request):
     selected_level = request.GET.get('level')
-    booked_slots = Entry_Vehicle.objects.filter(level=selected_level).values_list('slot', flat=True)
-    available_slots = [slot for slot in SLOTS[selected_level] if slot not in booked_slots]
-    return JsonResponse({'slots': available_slots})
+    booked_parks = Entry_Vehicle.objects.filter(level=selected_level).values_list('parking_number', flat=True)
+    available_parks = [parking_number for parking_number in PARKS[selected_level] if parking_number not in booked_parks]
+    return JsonResponse({'parks': available_parks})
 
 def entry(request):
     return render(request, 'main/entry.html')
@@ -60,7 +60,7 @@ def entry_vehicle(request):
         uploaded_file = request.FILES['image']
         gate_no = request.POST.get('gate_no')
         level = request.POST.get('level')
-        slot = request.POST['slot']
+        parking_number = request.POST['parking_number']
 
         # Save the uploaded image to the media directory
         file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
@@ -78,7 +78,7 @@ def entry_vehicle(request):
               plate_number=plate_number,
               gate_no=gate_no,
               level = level,
-              slot = slot,
+              parking_number = parking_number,
               entry_time=now(),  # Automatically set the current time
               )
             return redirect('/vehicle_list/')
@@ -90,6 +90,7 @@ def entry_vehicle(request):
 def vehicle_list(request):
     vehicles = Entry_Vehicle.objects.all()
     return render(request,"main/in_out.html",{'vehicles':vehicles})
+
 
 def exit(request):
     return render(request,"main/exit_form.html")
@@ -103,6 +104,7 @@ def create_razorpay_order(charges_in_paise):
         'payment_capture': '1'  # Automatic payment capture
     }
     order = client.order.create(data=order_data)
+
     return order['id']
 
 
@@ -255,4 +257,24 @@ def payment_success_view(request):
 
 
 
- 
+#  Configurations here 
+
+@login_required
+def create_project(request):
+    if request.method == "POST":
+        form = ProjectForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.create_by = request.user
+            project.modify_by = request.user
+            project.save()
+            # return redirect('some_success_page')
+            return HttpResponse("Project created sucessfully!")
+    else:
+        form = ProjectForm()
+    return render(request, 'main/create_project.html', {'form': form})
+
+
+def project_list(request):
+    list=Project.objects.all()
+    return render(request,"main/project_list.html",{'list':list})

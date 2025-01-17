@@ -15,10 +15,13 @@ urlpatterns = [
     path('entry/',views.entry, name='entry'),
     path('entry_vehicle/',views.entry_vehicle, name='entry_vehicle'),
     path('vehicle_list/',views.vehicle_list, name='vehicle_list'),
-    path('get_available_slots/', views.get_available_slots, name='get_available_slots'),
+    path('get_available_parks/', views.get_available_parks, name='get_available_park'),
     path('exit/',views.exit, name='exit'),
     path('vehicle_exit/', views.vehicle_exit_view, name='vehicle_exit'),
     path('payment_success/', views.payment_success_view, name='payment_success'),
+    
+    path('create_project/',views.create_project, name='create_project'),
+    path('project_list/',views.project_list, name='project_list'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

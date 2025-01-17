@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.timezone import now
+from django.contrib.auth.models import User
 
 class Entry_Vehicle(models.Model):
     plate_number = models.CharField(max_length=20,unique=True)
@@ -13,10 +15,10 @@ class Entry_Vehicle(models.Model):
             ('Second Floor', 'Second Floor'),
         ]
     )
-    slot = models.CharField(max_length=20, default="Slot1")  # Parking slot
+    parking_number = models.CharField(max_length=20, default="Park1")  # Parking slot
 
     def __str__(self):
-        return f"{self.plate_number} - {self.level} - {self.slot}"
+        return f"{self.plate_number} - {self.level} - {self.parking_number}"
 
 
 class VehicleExit(models.Model):
@@ -45,3 +47,16 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment {self.id} - {self.razorpay_order_id}"
+
+
+# Configurations here 
+
+class Project(models.Model):
+    project_name = models.CharField(max_length=100)
+    create_date = models.DateTimeField(auto_now_add=True)
+    create_by = models.ForeignKey(User, related_name='created_projects', on_delete=models.CASCADE)
+    modify_date = models.DateTimeField(auto_now=True)
+    modify_by = models.ForeignKey(User, related_name='modified_projects', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.project_name

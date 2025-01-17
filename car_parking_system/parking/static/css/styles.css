@@ -1,4 +1,4 @@
-* {
+ * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -10,15 +10,13 @@ body {
 }
 
 .sidebar {
-    top: 0;
-    left: 0;
     width: 250px;
     background-color: #2d3e50;
     color: white;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Keeps items at the top */
     position: fixed;
     transition: transform 0.3s ease-in-out;
     transform: translateX(0);
@@ -38,14 +36,15 @@ body {
     font-size: 20px;
 }
 
-
 .menu {
     list-style-type: none;
-    padding: 10px 0;
+    padding: 20px 0;
+    margin-top: 10px; /* Adjusted for spacing below logo */
+    text-align: center;
 }
 
 .menu li {
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
 .menu a {
@@ -54,16 +53,34 @@ body {
     font-size: 16px;
     padding: 10px;
     display: block;
-    transition: background 0.3s;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    transition: background 0.3s, color 0.3s;
+    font-family: inherit;  /* Font style consistent rahega */
 }
 
 .menu a:hover {
     background-color: #1b2734;
     border-left: 4px solid #00bcd4;
-    padding-left: 16px;
+    padding-left: 10px;
 }
 
+.menu a.active { 
+    background-color: #1b2734;
+    border-left: 4px solid #00bcd4;
+    padding-left: 10px;
+    color: white;  /* Font color same rahega */
+    font-size: 16px;  
+    font-family: inherit;  
+    font-weight: normal; /* Bold ya italic kuch bhi nahi */
+}
+
+
+
+
 .footer {
+    margin-top: auto; /* Keeps footer at the bottom */
     text-align: center;
     padding: 10px 0;
     background-color: #1b2734;
@@ -73,7 +90,7 @@ body {
 
 .content {
     margin-left: 250px;
-    padding-left: 5px; 
+    padding: 0; 
     width: calc(100% - 250px);
     transition: margin-left 0.3s ease-in-out;
 }
@@ -86,7 +103,7 @@ body {
     font-size: 24px;
     background: none;
     border: none;
-    color: #2d3e50;
+    color: white;
     cursor: pointer;
     z-index: 1000;
 }
@@ -108,11 +125,4 @@ body {
     .toggle-btn {
         display: block;
     }
-}
-
-
-.menu a.active {
-    background-color: #1b2734;
-    border-left: 4px solid #00bcd4;
-    padding-left: 16px;
 }
