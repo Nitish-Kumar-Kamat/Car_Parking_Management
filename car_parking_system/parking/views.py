@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
 from django.shortcuts import render,get_object_or_404,redirect
-from .models import Entry_Vehicle, VehicleExit,Project
+from .models import Entry_Vehicle, VehicleExit,Project,Tower, Floor, ParkingNumber
 from django.utils.timezone import now
 from .utils import detect_number_plate,get_ocr_model
 from django.contrib import messages
@@ -13,7 +13,8 @@ from django.contrib.auth.decorators import login_required
 import razorpay
 from django.views.decorators.csrf import csrf_exempt
 import logging
-from .forms import ProjectForm
+from .forms import ProjectForm, TowerForm, FloorForm, ParkingNumberForm
+
 
 def process_image(request):
     ocr_model = get_ocr_model() 
@@ -278,3 +279,40 @@ def create_project(request):
 def project_list(request):
     list=Project.objects.all()
     return render(request,"main/project_list.html",{'list':list})
+
+
+@login_required
+def create_tower(request):
+    if request.method == "POST":
+        form = TowerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect('some_success_page')
+            return HttpResponse("Project created sucessfully!")
+    else:
+        form = TowerForm()
+    return render(request, 'main/create_tower.html', {'form': form})
+
+@login_required
+def create_floor(request):
+    if request.method == "POST":
+        form = FloorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect('some_success_page')
+            return HttpResponse("Project created sucessfully!")
+    else:
+        form = FloorForm()
+    return render(request, 'main/create_floor.html', {'form': form})
+
+@login_required
+def create_parking_number(request):
+    if request.method == "POST":
+        form = ParkingNumberForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect('some_success_page')
+            return HttpResponse("Project created sucessfully!")
+    else:
+        form = ParkingNumberForm()
+    return render(request, 'main/create_parking_number.html', {'form': form})

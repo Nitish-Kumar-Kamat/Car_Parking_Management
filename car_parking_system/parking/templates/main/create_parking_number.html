@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Project</title>
+</head>
+<body>
+    <h2>Create a New Project</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Parking Nnumber</button>
+    </form>
+    <a href="/">Back to Home</a>
+    <a href="{% url 'project_list' %}">Show Project List</a>
+</body>
+</html>

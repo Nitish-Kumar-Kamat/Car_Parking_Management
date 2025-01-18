@@ -22,6 +22,10 @@ urlpatterns = [
     
     path('create_project/',views.create_project, name='create_project'),
     path('project_list/',views.project_list, name='project_list'),
+    path('create_tower/', views.create_tower, name='create_tower'),
+    path('create_floor/', views.create_floor, name='create_floor'),
+    path('create_parking_number/', views.create_parking_number, name='create_parking_number'),
+    
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Entry_Vehicle, VehicleExit, Payment,Project
+from .models import Entry_Vehicle, VehicleExit, Payment,Project,Tower,Floor,ParkingNumber
 
 @admin.register(Entry_Vehicle)
 class EntryVehicleAdmin(admin.ModelAdmin):
@@ -38,3 +38,19 @@ class PaymentAdmin(admin.ModelAdmin):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('project_name', 'create_date', 'create_by', 'modify_date', 'modify_by')
+    
+
+@admin.register(Tower)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('project', 'tower_name')
+    
+
+@admin.register(Floor)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('tower', 'floor_name')
+    
+
+@admin.register(ParkingNumber)
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('floor', 'parking_number')
+    

@@ -60,3 +60,25 @@ class Project(models.Model):
 
     def __str__(self):
         return self.project_name
+
+
+class Tower(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    tower_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.tower_name
+
+class Floor(models.Model):
+    tower = models.ForeignKey(Tower, on_delete=models.CASCADE)
+    floor_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.floor_name
+
+class ParkingNumber(models.Model):
+    floor = models.ForeignKey(Floor, on_delete=models.CASCADE)
+    parking_number = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.parking_number

@@ -15,9 +15,9 @@
         </button>
         <div class="dropdown-content">
             <a href="{% url 'project_list' %}">Projects</a>
-            <a href="#">Tower</a>
-            <a href="#">Floor</a>
-            <a href="#">Parking Number</a>
+            <a href="{% url 'create_tower' %}">Tower</a>
+            <a href="{% url 'create_floor' %}">Floor</a>
+            <a href="{% url 'create_parking_number' %}">Parking Number</a>
         </div>
     </div>
     <a href="javascript:void(0);" class="icon" onclick="toggleMenu()">&#9776;</a>

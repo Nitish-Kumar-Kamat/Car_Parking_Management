@@ -46,13 +46,14 @@
 
         th, td {
             padding: 10px;
-            text-align: left;
+            text-align: center;
             border: 1px solid #ddd;
         }
 
         th {
             background-color: #2d3e50;
             color: white;
+            text-align: center;
         }
 
         tr:nth-child(even) {
@@ -68,6 +69,8 @@
             height: auto;
             display: block;
         }
+
+        
 
         @media (max-width: 768px) {
             th, td {
@@ -85,6 +88,64 @@
         .new-records{
             text-align: left;
         }
+
+   /* Basic styling */
+.edit-delete {
+    text-align: center;
+  }
+  
+  .edit-btn, .delete-btn {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: white;
+    border-radius: 4px;
+    margin: 0 5px;
+    font-weight: bold;
+    display: inline-block;
+  }
+  
+  /* Update button style */
+  .edit-btn {
+    background-color: #4CAF50; /* Green for Update */
+  }
+  
+  .delete-btn {
+    background-color: #f44336; /* Red for Delete */
+  }
+  
+  /* Hover effects */
+  .edit-btn:hover {
+    background-color: #45a049;
+  }
+  
+  .delete-btn:hover {
+    background-color: #e53935;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .edit-delete {
+      text-align: left;
+    }
+  
+    .edit-btn, .delete-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0;
+      font-size: 14px;
+    }
+  
+    .edit-btn {
+      background-color: #4CAF50; /* Green */
+    }
+  
+    .delete-btn {
+      background-color: #f44336; /* Red */
+    }
+  }
+  
+
     </style>
 </head>
 <body>
@@ -104,6 +165,7 @@
                         <th>Created By</th>
                         <th>Modify Date</th>
                         <th>Modified By</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,6 +176,12 @@
                         <td>{{i.create_by}}</td>
                         <td>{{i.modify_date}}</td>
                         <td>{{i.modify_by}}</td>
+                        <td class="edit-delete">
+                            <a href="#" class="edit-btn">Edit</a>
+                            <a href="#" class="delete-btn">Delete</a>
+                          </td>
+                          
+
                     </tr>
                   {% endfor %}
                 </tbody>
